@@ -12,3 +12,6 @@
     `python run.py`
 
 3. Go to http://0.0.0.0:3001/
+
+
+This is project is developed to categorize twitter messages into different categories using machine learning pipeline.
