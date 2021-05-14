@@ -33,6 +33,16 @@ Data cleaning process in this project mainly involves create 36 individual categ
 
 #### NLP
 
-Before we can perform any 
+Before we can perform any machine learning modeling on the messages, we first need to process the message to a form that the computer can read. This includes tokenized, remove puchcuation and lemmatize the message. Details of this process in included in the python script 'train_classifier.py'
 
-###
+### Build the model
+
+In this step we build a machine pipeline that includes the vectorizer, transformer and classifier. There are several classifer that we can try to use here such as K-nearest neighbors (KNeighbors) classifer and Ramdom Forest classifer. To use a different classifer, simply comment other classifers and uncomment the one that you want to test. we can also perform grid search to find the best parameter for different classifer. But to save model training time, for this project, I commented the grid search part. Details on build the model can also be found in python script 'train_classifier.py'
+
+### Evaluate model
+
+The evaluation of the model is done by the "evaluate_model" function in the "train_classifier.py" script. It returns a text summary of the precision, recall, F1 score for each category.
+
+### Web Page
+
+Finally, this package generate a webpage that a user can input message and returns the categories of that message. The webpage can be run at http://localhost/0.0.0.0:3001/ if you are runing this script locally.
