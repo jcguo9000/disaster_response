@@ -1,6 +1,6 @@
 # Disaster Response Pipeline Project
 
-### Instructions:
+## Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
     - To run ETL pipeline that cleans data and stores in database
@@ -12,6 +12,8 @@
     `python run.py`
 
 3. If you are runing this script locally, Go to http://localhost/0.0.0.0:3001/
+
+##Project Summary
 
 ### Introduction
 
@@ -46,3 +48,21 @@ The evaluation of the model is done by the "evaluate_model" function in the "tra
 ### Web Page
 
 Finally, this package generate a webpage that a user can input message and returns the categories of that message. The webpage can be run at http://localhost/0.0.0.0:3001/ if you are runing this script locally.
+
+##Files in the Repository
+
+	*app
+	|-template
+	||-master.html #main page of the web app
+	||-go.html #classification result page of the web app
+	| -run.py #Flask file that runs app
+	*data
+	|- disaster_categories.csv # data to process
+	|- disaster_messages.csv # data to process
+	|- process_data.py
+	|- DisasterResponse.db # database to save clean data to
+	*models
+	|- train_classifier.py
+	|- classifier.pkl # saved model
+	&README.md
+	
