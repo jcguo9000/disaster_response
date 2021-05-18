@@ -27,9 +27,15 @@ from sklearn.metrics import classification_report
 
 # create load data function
 def load_data(database_filepath):
+
+	'''
+	load the processed data from sql database.
+	the function takes in the database filepath/filename
+	returns X, y and the category names
+	'''
     
     #creat engine and connnection to the sql database
-    # 'database_filepath' point to the input datafile name and path  
+	# 'database_filepath' point to the input datafile name and path 
     engine = db.create_engine(str('sqlite:///'+database_filepath))
     connection = engine.connect()
     
@@ -39,7 +45,7 @@ def load_data(database_filepath):
     # set 'message' column as X, and set all of the categorical columns as y
     X = df['message']
     y = df[df.columns[4:]]
-    # get column names
+	# get column names
     category_names = list(df.columns[4:])
     
     return X, y, category_names
@@ -47,6 +53,14 @@ def load_data(database_filepath):
 
 # define the function to tokenized the text
 def tokenize(text):
+
+	'''
+	This function takes in the text message as a string, convert the words in the sentences 
+	to lower cases, lemmatize, and then remove punctuations, and returns a list of cleaned 
+	tokens.
+	'''
+	
+
     #tokenized sentences
     tokens = word_tokenize(text)
     #create lammatizer
@@ -63,14 +77,20 @@ def tokenize(text):
 
 # defined the funtion to build to model
 def build_model():
+
+	'''
+	This function builds the machine learning pipeline;
+	GridSearch for the best perform parameters for the classifier
+	'''
     
     #build pipeline
     pipeline = Pipeline([
     ('vect', CountVectorizer(tokenizer=tokenize)),
     ('tfidf', TfidfTransformer()),
-    # here we use Random Forest Classifier
-    # more classifier can be explore such as ...
     ('clf', RandomForestClassifier())
+	# here we use Random Forest Classifier
+    # more classifier can be explore such as ...
+	#('clf', KNeighborsClassifier())
     ])
     
     #set parameters for GridSearch # only selected 1 here to reduce program processing time
@@ -83,34 +103,42 @@ def build_model():
 
     return pipeline
 
-# define the function to evaluate the model
 def evaluate_model(model, X_test, Y_test, category_names):
-    # get the predicted value from the test set
-    Y_pred = model.predict(X_test)
-    
+    '''
+	This function evaluates the performace of the classifier
+	
+	'''
+		
+	# get the predicted Y
+	Y_pred = model.predict(X_test)
+	
     n = 0
+	# print the classification_report for every category
     for col in category_names:
         # print category name
-        print(col)
+		print(col)
         # display the classfication report for this category
-        print(classification_report(Y_test[col], Y_pred[:,n]))
+		print(classification_report(Y_test[col], Y_pred[:,n]))
         n+=1
 
     #print("\nBest Parameters:", model.best_params_)
 
 # save this model as a pickle file for the webapp
 def save_model(model, model_filepath):
+
+	'''
+	'model_filepath' points to the desired path and filename of the pickle file
+	'''
     import pickle
-    # 'model_filepath' points to the desired path and filename of the pickle file
     filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
 
 
 def main():
-    
-    # the function takes in 3 argument including this python file
+
+	# the function takes in 3 argument including this python file
     if len(sys.argv) == 3:
-        #database_filepath, model_filepath are the last 2 arguments
+		#database_filepath, model_filepath are the last 2 arguments
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
