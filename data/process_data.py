@@ -6,18 +6,28 @@ from sqlalchemy import create_engine
 
 # define the data loading function
 def load_data(messages_filepath, categories_filepath):
+	
+	'''
+	load the data to process
+	join two dataframes to form a single dataframe for processing 
+	'''
+
     # read 'disaster_messages.csv' in to messages
     messages = pd.read_csv(messages_filepath)
     # read 'disaster_categories.csv' in to categories
     categories = pd.read_csv(categories_filepath)
-    # inner join these tow dataframes on 'id' column
+    # inner join these two dataframes on 'id' column
     df = messages.merge(categories, left_on = ['id'], right_on = ['id'], how = 'inner')
     # return the obtained dataframe
     return df
 
 # define cleaning data function
 def clean_data(df):
-    # create a dataframe of the 36 individual category columns
+	'''
+	This function takes in the original dataframe and returns a dataframe of message id columns with 36 individual category columns
+	The function turns the values in categorical columns into numerical values for building the model
+	This function also process the values other than 0 and 1; and removes dupicates
+	'''
     categories = df['categories'].str.split(';',expand = True)
     # select the first row of the categories dataframe
     # use this row to extract a list of new column names for categories.
@@ -33,6 +43,11 @@ def clean_data(df):
         categories[column] = categories[column].astype(str).str[-1:]
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
+	# based on the examination of the data, in the "related" column, there are 246 entries of "2"
+	# since all the other entry are 0 and 1 with 0 indicates the message dose not belong to the category
+	# and 1 indicates the message belong to that category.
+	# here set the values in the dataframe greater than 1 to 1.
+    categories.loc[:,:][categories > 1] = 1
     
     # drop the original categories column from `df`
     df = df.drop(columns = ['categories'])
@@ -48,7 +63,7 @@ def save_data(df, database_filepath):
     #create an engine connect to sqlite
     engine = create_engine(str('sqlite:///' + database_filepath))
     #save as database
-    df.to_sql(database_filepath[5:-3], engine, index=False)
+    df.to_sql(database_filepath[5:-3], engine, index=False, if_exists='replace')
 
 
 def main():
