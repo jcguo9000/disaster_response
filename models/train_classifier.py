@@ -89,7 +89,7 @@ def build_model():
     #('clf', KNeighborsClassifier())
     ])
 
-    #set parameters for GridSearch # only selected 1 here to reduce program processing time
+    #set parameters for GridSearch # only selected 2 here to reduce program processing time
     parameters = {
             'vect__max_features': (None,5000),
             'tfidf__smooth_idf': (True, False),
